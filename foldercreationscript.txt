@@ -1,0 +1,38 @@
+@echo off
+setlocal
+
+REM Set the base folder for your videos
+set "baseFolder=C:\Users\Bureau"
+
+:promptTitle
+set /p "videoTitle=Enter video title: "
+REM Validate the input to avoid unwanted characters
+echo %videoTitle%| findstr /r "^[abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_]*$" > nul
+if %errorlevel% neq 0 (
+    echo Invalid characters detected. Please use only letters, numbers, and underscores.
+    goto promptTitle
+)
+
+
+REM Check if the main video folder already exists
+if exist "%baseFolder%\%videoTitle%" (
+    echo The folder "%videoTitle%" already exists. Please choose a different title.
+    goto promptTitle
+) else (
+    REM Create the main video folder
+    mkdir "%baseFolder%\%videoTitle%"
+
+    REM Create subfolders
+    mkdir "%baseFolder%\%videoTitle%\Assets"
+    mkdir "%baseFolder%\%videoTitle%\Scripts"
+    mkdir "%baseFolder%\%videoTitle%\Images"
+
+    REM Create a Word document
+    copy nul "%baseFolder%\%videoTitle%\%videoTitle%.docx"
+
+    echo The folder "%videoTitle%" has been successfully created.
+)
+
+pause
+
+endlocal
